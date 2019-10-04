@@ -1,6 +1,6 @@
 <?php
 
-namespace Pessoa;
+namespace Fornecedor;
 use Zend\ServiceManager\Factory\InvokableFactory;
 /*
 Configuracao, retorna a rota conforme você passar as informações na URL ela vai
@@ -10,16 +10,16 @@ cada arquivo com qual parametro passar etc.
 return [
     'router' => [               //definindo a rota
         'routes' => [           // definindo chave das rotas do router
-            'pessoa' => [       // o app
-                'type' => \Zend\router\Http\Segment::class, // tipo dela é segment que é uma rota que vc cria uma configuração do tipo /pessoa/metodo etc... 
+            'fornecedor' => [       // o app
+                'type' => \Zend\router\Http\Segment::class, // tipo dela é segment que é uma rota que vc cria uma configuração do tipo /Fornecedor/metodo etc... 
                 'options' => [
-                    'route' => '/pessoa[/:action[/:id]]', // o que vai poder ser passado ou não (opcional)
+                    'route' => '/fornecedor[/:action[/:id]]', // o que vai poder ser passado ou não (opcional)
                     'constraints' => [ // as limitações para evitar sqlinjection
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]+'
                     ],
                     'defaults' =>[  // valores padroes
-                        'controller' => Controller\PessoaController:: //controller padrao
+                        'controller' => Controller\FornecedorController:: //controller padrao
                         class,
                         'action' => 'index', //action padrao
                     ],
@@ -28,16 +28,22 @@ return [
         ],
     ],
     'controllers' => [ // definindo construtor do controller
-        'factories' => [
-            Controller\PessoaController::class => InvokableFactory::class, // quando tentar acessar o controller default ele vai usar o construtor generico do zend
+        'factories' => [ // talvez não vai precisar do invokable pois ja construi um factorie no module pois ele não passa nada e no controller precisa do table
+            // Controller\FornecedorController::class => InvokableFactory::class, // quando tentar acessar o controller default ele vai usar o construtor generico do zend
         ],
     ],
     'view_manager' => [ //onde está nossas views para informa o zend
         'template_path_stack' => [ //caminho do template
-            'pessoa' => __DIR__. '/../view', // variavel do php que faz referencia ao diretorio atual
+            'fornecedor' => __DIR__. '/../view', // variavel do php que faz referencia ao diretorio atual
         ],
     ] ,
-
+    'db' => [
+        'driver' => 'Mysqli',
+        'database' => 'fornecedor',
+        'username' => 'root',
+        'password' => 'root',
+        'hostname' => 'localhost',
+    ]
 ];
 
 

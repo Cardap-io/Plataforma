@@ -1,0 +1,17 @@
+<H1>Lista de Fornecedor</H1>
+<table class="table table-stripped">
+    <tr>
+        <th>Código</th>
+        <th>Nome</th>
+</tr>
+<?php
+    foreach($fornecedores as $fornecedor) :
+        ?>
+            <tr>
+                <td><?=$fornecedor->getId()?></td>
+                <td><?=$fornecedor->getNome()?></td>
+            </tr>
+        <?php
+    endforeach;
+?>
+</table>

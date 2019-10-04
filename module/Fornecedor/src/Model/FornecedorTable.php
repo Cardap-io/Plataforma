@@ -1,11 +1,11 @@
 <?php
 
-namespace Pessoa\Model;
+namespace Fornecedor\Model;
 
 use RuntimeException;
 use Zend\Db\TableGateway\TableGatewayInterface;
 
-class PessoaTable {
+class FornecedorTable {
 
     private $tableGateway;
 
@@ -17,7 +17,7 @@ class PessoaTable {
         return $this->tableGateway->select(); // retorna tudo do tableGateway do banco
     }
 
-    public function getPessoa($id) {
+    public function getFornecedor($id) {
         $id = (int) $id; 
         $rowset = $this->tableGateway->select(['id' => $id]); // where id
         $row = $rowset->current(); // se existe um registro o current retorna a linha atual
@@ -27,15 +27,15 @@ class PessoaTable {
         return $row;
     }
 
-    public function salvarPessoa(Pessoa $pessoa) {
+    public function salvarFornecedor(Fornecedor $Fornecedor) {
         $data = [
-            'nome' => $pessoa->getNome(),
-            'sobrenome' => $pessoa->getSobrenome(),
-            'email' => $pessoa->getEmail(),
-            'situacao' => $pessoa->getSituacao(),
+            'nome' => $Fornecedor->getNome(),
+            'sobrenome' => $Fornecedor->getSobrenome(),
+            'email' => $Fornecedor->getEmail(),
+            'situacao' => $Fornecedor->getSituacao(),
         ];
 
-        $id = (int) $pessoa->getId();
+        $id = (int) $Fornecedor->getId();
         if ($id === 0) { // se não encontrar nenhum id ele faz um insert (o current retorna 0 caso não encontre nada)
             $this->tableGateway->insert($data);
             return;
@@ -43,7 +43,7 @@ class PessoaTable {
         $this->tableGateway->update($data,['id'=>$id]); // where no update
     }
 
-    public function deletarPessoa($id) {
+    public function deletarFornecedor($id) {
         $this->tableGateway->delete(['id'=>(int)$id]);
     }
 }

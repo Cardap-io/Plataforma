@@ -12,7 +12,8 @@
  */
 return [
     'Zend\Router',
+    'Zend\Db',
     'Zend\Validator',
     'Application',
-    'Pessoa',
+    'Fornecedor',
 ];

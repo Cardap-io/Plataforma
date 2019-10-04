@@ -1,9 +1,9 @@
 <?php
 
-namespace Pessoa\Model;
+namespace Fornecedor\Model;
 
-class Pessoa  {
-    // public class Pessoa  { 
+class Fornecedor  {
+    // public class Fornecedor  { 
 
     private $id;
     private $nome;
