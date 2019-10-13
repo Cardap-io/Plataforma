@@ -2,7 +2,7 @@
 
 namespace Fornecedor\Model;
 
-class Fornecedor  {
+class Fornecedor  implements \Zend\Stdlib\ArraySerializableInterface {
     // public class Fornecedor  { 
 
     private $id;
@@ -59,6 +59,15 @@ class Fornecedor  {
         $this->situacao = $situacao;
     }
 
+    public function getArrayCopy(): array {
+        return[
+            'id' => $this->id,
+            'nome' => $this->nome,
+            'sobrenome' => $this->sobrenome,
+            'email' => $this->email,
+            'situacao' => $this->situacao,
+        ];
+    }
 }
 
 ?>

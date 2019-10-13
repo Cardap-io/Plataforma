@@ -1,7 +1,7 @@
 <?php
 
 namespace Fornecedor;
-use Zend\ServiceManager\Factory\InvokableFactory;
+// use Zend\ServiceManager\Factory\InvokableFactory;
 /*
 Configuracao, retorna a rota conforme você passar as informações na URL ela vai
 direcionar para o caminho de cada arquivo e o que deve ser chamado de 
@@ -18,7 +18,7 @@ return [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]+'
                     ],
-                    'defaults' =>[  // valores padroes
+                    'defaults' => [  // valores padroes
                         'controller' => Controller\FornecedorController:: //controller padrao
                         class,
                         'action' => 'index', //action padrao
@@ -38,14 +38,11 @@ return [
         ],
     ] ,
     'db' => [
-        'driver' => 'Mysqli',
+        'driver' => 'Pdo_Mysql',
         'database' => 'fornecedor',
         'username' => 'root',
         'password' => 'root',
         'hostname' => 'localhost',
     ]
 ];
-
-
-
 ?>

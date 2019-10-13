@@ -1,4 +1,6 @@
 <H1>Lista de Fornecedor</H1>
+<a href = "<?=$this->url('fornecedor', ['action'=>'adicionar'])?>" class = "btn btn-success">Adicionar</a>
+
 <table class="table table-stripped">
     <tr>
         <th>Código</th>
@@ -10,6 +12,8 @@
             <tr>
                 <td><?=$fornecedor->getId()?></td>
                 <td><?=$fornecedor->getNome()?></td>
+                <td><a href = "<?=$this->url('fornecedor', ['action' => 'editar', 'id' => $fornecedor->getId()])?>" class = "btn btn-info"><i class = "glyphicon glyphicon-edit"></i></a>
+                <td><a href = "<?=$this->url('fornecedor', ['action' => 'remover', 'id' => $fornecedor->getId()])?>" class = "btn btn-danger"><i class = "glyphicon glyphicon-trash"></i></a>
             </tr>
         <?php
     endforeach;

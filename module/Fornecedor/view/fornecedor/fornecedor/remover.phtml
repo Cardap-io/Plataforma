@@ -1,0 +1,17 @@
+<?php
+
+use Zend\Form\Element\Submit;
+
+$title = "Removendo fornecedor";
+$this->headTitle($title);
+?>
+
+<h1><?=$this->escapeHtml($title)?></h1>
+<p> Deseja mesmo excluir "<?=$this->escapeHtml($fornecedor->getNome())?>"?</p>
+<form method = "post" action = "<?=$this->url('fornecedor', ['action' => 'remover', 'id' => $id])?>">
+    <div class = "form-group">
+        <input type = "hidden" name = "id" value = "<?=$id?>">
+        <input type = "submit" class = "btn btn-danger" name = "deletar" value = "Sim">
+        <input type = "submit" class = "btn btn-success" name = "deletar" value = "Não">
+    </div>
+</form>

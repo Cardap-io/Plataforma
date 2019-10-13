@@ -23,7 +23,6 @@ class FornecedorTable {
         $row = $rowset->current(); // se existe um registro o current retorna a linha atual
         if (!$row)
             throw new RuntimeException(sprintf('Não foi encontrado o id %d',$id)); //se ocorrer um erro encontrado no tempo de execução
-
         return $row;
     }
 
@@ -40,11 +39,11 @@ class FornecedorTable {
             $this->tableGateway->insert($data);
             return;
         }
-        $this->tableGateway->update($data,['id'=>$id]); // where no update
+        $this->tableGateway->update($data,['id' => $id]); // where no update
     }
 
     public function deletarFornecedor($id) {
-        $this->tableGateway->delete(['id'=>(int)$id]);
+        $this->tableGateway->delete(['id' => (int)$id]);
     }
 }
 ?>
