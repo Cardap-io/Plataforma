@@ -34,7 +34,7 @@ return [
     ],
     'view_manager' => [ //onde está nossas views para informa o zend
         'template_path_stack' => [ //caminho do template
-            'fornecedor' => __DIR__. '/../view', // variavel do php que faz referencia ao diretorio atual
+            'fornecedor' => __DIR__. '/../src/view', // variavel do php que faz referencia ao diretorio atual
         ],
     ] ,
     'db' => [
