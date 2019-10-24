@@ -14,6 +14,14 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        return new ViewModel();
+        die('1');
+        // require_once  __DIR__ .'/../../../../vendor/autoload.php';
+        
+        // $loader = new \Twig\Loader\FilesystemLoader(__DIR__ .'/../../view/layout');
+        // $twig = new \Twig\Environment($loader, []);
+        // $layout = $twig->load('layout.phtml');
+        // echo $layout->render();
+      
+        // return new ViewModel();
     }
 }
