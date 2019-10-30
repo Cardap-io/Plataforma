@@ -1,0 +1,50 @@
+<?php
+$title = "Cardapio";
+$this->headTitle($title);
+?>
+
+<h1><?=$this->escapeHtml($title)?></h1>
+
+<section class="content-header">
+    <a href = "<?=$this->url('fornecedor', ['action'=>'index'])?>" class = "btn btn-warning">Voltar</a>
+</section>
+<section class="content container-fluid">
+    <div>
+        <div class="col-md-12">
+        <?php
+            $titulos = array("Entrada","Prato principal","Bebidas");
+            foreach($titulos as $titulo) :
+        ?>
+                    <div class="box box-default collapsed-box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><?=$titulo?></h3>
+                        <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                        </button>
+                        </div>
+                    </div>  
+                        <div class="box-body">
+                            <table class="table no-border">
+                            <tbody>
+                                <?php
+                                $testes = array(array("ALIMENTO" => "Arroz","VALOR" => "19.90"),array("ALIMENTO" => "Carne","VALOR" => "19.90"));
+                                    foreach($testes as $teste) :
+                                        ?>
+                                            <tr>
+                                            <th style="width: 5%"></th>
+                                            <th style="width: 85%"><?=$teste['ALIMENTO']?></th>
+                                            <th><?=$teste['VALOR']?></th>
+                                            </tr>
+                                        <?php
+                                    endforeach;
+                                ?>
+                                </tbody>
+                            </table> 
+                        </div> 
+                    </div>
+            <?php
+            endforeach;
+            ?>
+        </div>
+    </div>
+</section>
