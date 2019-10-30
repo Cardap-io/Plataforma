@@ -1637,9 +1637,9 @@ a:focus {
   border: 1px solid #d2d6de;
 }
 .box.box-solid.box-default > .box-header {
-  color: #444;
+  color: rgb(255, 255, 255);
   background: #d2d6de;
-  background-color: #d2d6de;
+  background-color: #f8a960;
 }
 .box.box-solid.box-default > .box-header a,
 .box.box-solid.box-default > .box-header .btn {

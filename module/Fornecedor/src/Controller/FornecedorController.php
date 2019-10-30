@@ -84,6 +84,9 @@ class FornecedorController extends AbstractActionController {
         return ['id' => $id, 'fornecedor' => $this->table->getFornecedor($id)];
     }
 
+    public function cardapioAction() {
+    }
+
 }
 
 ?>
