@@ -1,12 +1,103 @@
 <?php
 $title = "Cardapio";
 $this->headTitle($title);
-?>
+// $this->headScript()->prependFile(
+    // $this->baseUrl(__DIR__.'/cardapio.js'));
 
+//   $this->basePath(__DIR__.'/cardapio.js');
+    // ->prependFile($this->basePath('js/jquery-3.1.0.min.js'))
+
+//  echo $this->headLink()->prependStylesheet(
+//     $this->baseUrl('path/to/file.css'));
+//  echo $this->inlineScript()->prependFile(
+//         'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js');
+// print_R(Zend_Controller_Front::getInstance()->getRequest()->getControllerName());
+// die('alo');
+// 
+?>
+<script src="<?=$this->basePath('/js/cardapio.js')?>"></script>
 <h1><?=$this->escapeHtml($title)?></h1>
 
 <section class="content-header">
-    <a href = "<?=$this->url('fornecedor', ['action'=>'index'])?>" class = "btn btn-warning">Voltar</a>
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">Cadastrar cardapio</button>
+<div class="modal fade modal-xl" id="modal-default" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Cardapio</h4>
+            </div>
+            <div class="modal-body">
+                <!-- <input type="button" onclick="clonarLinha()" value="Nova linha" /> -->
+                <!-- <div class="col-md-9">  
+                    <input type="text" name="q" class="form-control __web-inspector-hide-shortcut__" placeholder="Título...">
+                </div>
+                <div class="col-md-3">  
+                    <button type="button" onclick="clonarLinha()" class="btn btn-block btn-warning">Titulo cardapio</button>
+                </div> -->
+                <?php
+                    $form->setAttribute('action', $this->url('fornecedor', ['action' => 'cardapio']));
+                    $form->prepare();
+                    echo $this->form()->openTag($form);
+                    $id = $this->form->get('id');
+                    $item = $this->form->get('item')->setAttribute('class','form-control')->setAttribute('id','item');
+                    $valor = $this->form->get('valor')->setAttribute('class','form-control')->setAttribute('id','valor');
+                    $titulo = $this->form->get('titulo')->setAttribute('class','form-control ')->setAttribute('autofocus','autofocus');
+                    // $submit = $this->form->get('submit')->setAttribute('class','btn btn-primary');
+                    // $this->formElement($id);
+                ?>
+                <div class="container" >
+                    <div id="container">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <?=$this->formLabel($titulo)?>
+                                <?=$this->formElement($titulo)?>
+                            </div>
+                        </div>
+                        <div id="tituloItens" class="row" style="display:none; " >
+                            <div class="col-sm-4">
+                                <?=$this->formLabel($item)?>
+                            </div>
+                            <div class="col-sm-2">
+                                <?=$this->formLabel($valor)?>
+                            </div>
+                        </div>
+                        <div class="row" id="itens" style="display:none">
+                            <div class="col-sm-4">
+                                <?=$this->formElement($item)?>
+                            </div>
+                            <div class="col-sm-1">
+                                <?=$this->formElement($valor)?>
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" id="exclsuirItens" name="itemExcluido"class="btn btn-block btn-danger btn-xs" onclick="deletarItens('itens')" >Exluir  </button>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="row" style="margin-top: 1%">
+                            <div class="col-sm-2">
+                                <!-- <button type="button" id="adicionarItem" class="btn btn-block btn-info btn-xs" > Adicionar item </button> -->
+                                <button type="button" id="adicionarItens" class="btn btn-block btn-info btn-xs" > Adicionar item </button>
+                            </div>
+                    </div>
+                </div>
+                <!-- <table id="tbl" border="1">
+                    <tr>
+                    <td>Produto</td>
+                    <td>Valor</td>
+                    <td>Acao</td>
+                    </tr>
+                </table>         -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
+
+                <button type="button" class="btn btn-primary" onclick="getOutput()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
 </section>
 <section class="content container-fluid">
     <div>

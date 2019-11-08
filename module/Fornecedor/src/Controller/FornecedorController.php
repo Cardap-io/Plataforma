@@ -9,6 +9,7 @@ use Exception;
 use Fornecedor\Form\FornecedorForm;
 use Zend\Mvc\Controller\AbstractActionController; // Class  AbstractActionController vem do zend
 use Zend\View\Model\ViewModel;
+use Zend\Mvc\Controller\Plugin\Url;
 
 class FornecedorController extends AbstractActionController {
 
@@ -85,6 +86,23 @@ class FornecedorController extends AbstractActionController {
     }
 
     public function cardapioAction() {
+        $form = new FornecedorForm();
+        // die('alo');
+        // $form->get('submit')->setValue('Adicionar');
+        // $request = $this->getRequest(); ///Pega as informações da requisição que foi enviado pelo php via objeto
+        // print_R($request);
+        // die('alo');
+        // if (!$request->isPost())
+        //     return new ViewModel(['form' => $form]);
+
+        // $fornecedor = new \Fornecedor\Model\Fornecedor();
+        // $form->setData($request->getPost());
+        // if (!$form->isValid()) 
+            return new ViewModel(['form' => $form]);
+ 
+        // $fornecedor->exchangeArray($form->getData());
+        // $this->table->salvarFornecedor($fornecedor);
+        // return $this->redirect()->toRoute('fornecedor');
     }
 
 }
