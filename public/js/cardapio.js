@@ -19,26 +19,77 @@ window.addEventListener("load", function () {
     }
     count += 1;
   });
+
+  document.getElementById("salvar").addEventListener("click", function (event) {
+    dados = JSON.stringify(pegaValor());
+    $.ajax({
+        type: 'POST',
+        url: 'teste',
+        dataType: 'JSON',
+        data: {
+          data: dados
+        },
+        success: function (data) {
+          console.log('sucesso');
+        }
+    });
+  });
 });
 
 function pegaValor(){
-  var elemento = document.getElementsByName('item');
-  // elemento;
- console.log(elemento)
-  for(i=0;i<elemento.length;i++){
-     var e = elemento[i];
-     console.log(e.value)
-    //  if(e.value == '' || e.value == null){
-    //     alert("Eu sou um alert!");
-    //     e.focus();
-    //  }
+  var itens = document.getElementsByName('item');
+  var valores = document.getElementsByName('valor');
+  var titulo = document.getElementsByName('titulo');
+  var itemPaiEscondido = document.getElementById('itens').attributes.style.value == 'display:show;' ? false : true;
+  var dados = {};
+
+  for(i=0;i<itens.length;i++){
+    var iten = itens[i];
+    if((iten.value == '' || iten.value == null) && itemPaiEscondido == false){
+      alert("Preencha todos os campos!");
+      iten.focus();
+      break;
+    }else{
+      dados['ITEMS_'+i]['ITEM'+i]= iten.value;
+    } 
   }
+
+  for(i=0;i<valores.length;i++){
+    var valor = valores[i];
+    if((valor.value == '' || valor.value == null) && itemPaiEscondido == false){
+      alert("Preencha todos os campos!");
+      valor.focus();
+      break;
+    }
+    else if(!parseFloat(valor.value) && itemPaiEscondido == false){
+      alert("Digite apenas números!");
+      valor.focus();
+      break;
+    }else{
+      dados['ITEM_'+i]['VALOR'+i]= valor.value.replace(',', '.');
+    }
+ }
+  if(titulo[0].value != "" || titulo[0].value != null){
+    dados['TITULO'] = titulo[0].value;
+  }else{
+    alert("Digite o título!");
+    titulo[0].focus();
+  }
+
+  return dados;
+  
+}
+
+function montarJson(item,index){
+  console.log(item);
 }
 
 function deletarItens(itens){
   var itemDeletar = document.getElementById(itens);
   if(itens == 'itens'){
     itemDeletar.setAttribute('style','display:none;');
+    itemDeletar.children[1].children.item(0).value = '';
+    itemDeletar.children[0].children.item(0).value = '';
   }else{
     itemDeletar.remove();
   }
@@ -48,91 +99,3 @@ function deletarItens(itens){
     document.getElementById('tituloItens').setAttribute('style','display:none');
   }
 }
-
-
-//   $.ajax({
-//      url:'myAjax.php',
-//      complete: function (response) {
-//          $('#output').html(response.responseText);
-//      },
-//      error: function () {
-//          $('#output').html('Bummer: there was an error!');
-//      }
-//  });
-//  return false;
-
-function getOutput() {
-  $.ajax({
-    // http://localhost/Plataforma/public/fornecedor/FornecedorController.php/cardapio
-    url: '/Plataforma/public/fornecedor/FornecedorController.php/cardapio',
-    type: 'POST',
-    // data: JSON.stringify(requestData),
-    data: JSON.stringify(),
-    dataType: 'json',
-    contentType: 'application/json; charset=utf-8',
-    error: function (xhr) {
-      alert('Error: ' + xhr.statusText);
-      console.log('VAI TOMA NO CU');
-    },
-    success: function (result) {
-      // CheckIfInvoiceFound(result);
-      console.log('aii');
-    },
-    async: true,
-    processData: false
-  });
-}
-// // handles the click event for link 1, sends the query
-// function getOutput() {
-//   getRequest(
-//       'FornecedorController.php', // URL for the PHP file
-//        drawOutput,  // handle successful request
-//        drawError    // handle error
-//   );
-//   return false;
-// }  
-// // handles drawing an error message
-// function drawError() {
-//     // var container = document.getElementById('output');
-//     // container.innerHTML = 'Bummer: there was an error!';
-//     console.log('deu erro');
-// }
-// // handles the response, adds the html
-// function drawOutput(responseText) {
-//     // var container = document.getElementById('output');
-//     // container.innerHTML = responseText;
-//     console.log(responseText)
-// }
-// // helper function for cross-browser request object
-// function getRequest(url, success, error) {
-//     var req = false;
-//     try{
-//         // most browsers
-//         req = new XMLHttpRequest();
-//     } catch (e){
-//         // IE
-//         try{
-//             req = new ActiveXObject("Msxml2.XMLHTTP");
-//         } catch(e) {
-//             // try an older version
-//             try{
-//                 req = new ActiveXObject("Microsoft.XMLHTTP");
-//             } catch(e) {
-//                 return false;
-//             }
-//         }
-//     }
-//     if (!req) return false;
-//     if (typeof success != 'function') success = function () {};
-//     if (typeof error!= 'function') error = function () {};
- 
-//     req.onreadystatechange = function(){
-//         if(req.readyState == 4) {
-//             return req.status === 200 ? 
-//                 success(req.responseText) : error(req.status);
-//         }
-//     }
-//     req.open("GET", url, true);
-//     req.send();
-//     return req;
-// }

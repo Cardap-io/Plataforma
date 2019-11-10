@@ -87,19 +87,25 @@ class FornecedorController extends AbstractActionController {
 
     public function cardapioAction() {
         $form = new FornecedorForm();
-        // die('alo');
-        // $form->get('submit')->setValue('Adicionar');
-        // $request = $this->getRequest(); ///Pega as informações da requisição que foi enviado pelo php via objeto
-        // print_R($request);
-        // die('alo');
-        // if (!$request->isPost())
-        //     return new ViewModel(['form' => $form]);
-
-        // $fornecedor = new \Fornecedor\Model\Fornecedor();
-        // $form->setData($request->getPost());
-        // if (!$form->isValid()) 
+      
             return new ViewModel(['form' => $form]);
- 
+        
+    }
+
+    public function testeAction() {
+        $request = $this->getRequest();
+        $params = $request->getPost()->toArray();
+        $form = new FornecedorForm();
+        if (!$request->isPost())
+            return new ViewModel(['form' => $form]);
+
+        $fornecedor = new \Fornecedor\Model\Fornecedor();
+        $form->setData($request->getPost());
+        if (!$form->isValid()) 
+            return new ViewModel(['form' => $form]);
+//storage
+        print_r($params['data']);
+        die('aloo');
         // $fornecedor->exchangeArray($form->getData());
         // $this->table->salvarFornecedor($fornecedor);
         // return $this->redirect()->toRoute('fornecedor');

@@ -17,6 +17,8 @@ class Fornecedor  implements \Zend\Stdlib\ArraySerializableInterface {
         $this->sobrenome = !empty($data['sobrenome']) ? $data['sobrenome'] : null;
         $this->email = !empty($data['email']) ? $data['email'] : null;
         $this->situacao = !empty($data['situacao']) ? $data['situacao'] : null;
+        $this->item = !empty($data['item']) ? $data['item'] : null;
+        $this->valor = !empty($data['valor']) ? $data['valor'] : null;
     }
 
     public function getId() {
@@ -59,6 +61,21 @@ class Fornecedor  implements \Zend\Stdlib\ArraySerializableInterface {
         $this->situacao = $situacao;
     }
 
+    public function getItem() {
+        return $this->item;
+    }
+
+    public function setItem($item) {
+        $this->item = $item;
+    }
+
+    public function getValor() {
+        return $this->Valor;
+    }
+
+    public function setValor($Valor) {
+        $this->Valor = $Valor;
+    }
     public function getArrayCopy(): array {
         return[
             'id' => $this->id,
@@ -66,6 +83,8 @@ class Fornecedor  implements \Zend\Stdlib\ArraySerializableInterface {
             'sobrenome' => $this->sobrenome,
             'email' => $this->email,
             'situacao' => $this->situacao,
+            'item' => $this->item,
+            'valor' => $this->valor,
         ];
     }
 }
