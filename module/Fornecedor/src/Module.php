@@ -8,6 +8,8 @@ use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Fornecedor\Controller\FornecedorController;
 use Fornecedor\Model\FornecedorTable;
+use Fornecedor\Model\ItemTable;
+use Fornecedor\Model\TituloTable;
 /*
 quando module.config for chamado no zend pelos rotas etc, vai 
 chamar esse arquivo que informa que nosso diretorio é um module
@@ -31,7 +33,27 @@ class Module implements ConfigProviderInterface {
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Model\Fornecedor());
                     return new TableGateway('fornecedores', $dbAdapter, null, $resultSetPrototype);
-                }
+                },
+                Model\ItemTable::class => function($container) {
+                    $tableGateway = $container->get(Model\ItemTableGateway::class);
+                    return new ItemTable($tableGateway);
+                },
+                Model\ItemTableGateway::class => function($container) {
+                    $dbAdapter = $container->get(AdapterInterface::class);
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Model\Item());
+                    return new TableGateway('itens', $dbAdapter, null, $resultSetPrototype);
+                },
+                Model\TituloTable::class => function($container) {
+                    $tableGateway = $container->get(Model\TituloTableGateway::class);
+                    return new TituloTable($tableGateway);
+                },
+                Model\TituloTableGateway::class => function($container) {
+                    $dbAdapter = $container->get(AdapterInterface::class);
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Model\Titulo());
+                    return new TableGateway('titulos', $dbAdapter, null, $resultSetPrototype);
+                },
             ]
         ];
     }
@@ -40,9 +62,11 @@ class Module implements ConfigProviderInterface {
         return [
             'factories' => [
                 FornecedorController::class => function($container) {
-                    $tableGateway = $container->get(Model\FornecedorTable::class);
-                    return new FornecedorController($tableGateway);
-                },
+                    $tableGatewayFornecedor = $container->get(Model\FornecedorTable::class);
+                    $tableGatewayItem = $container->get(Model\ItemTable::class);
+                    $tableGatewayTitulo = $container->get(Model\TituloTable::class);
+                    return new FornecedorController($tableGatewayFornecedor,$tableGatewayItem,$tableGatewayTitulo);
+                }
             ]
         ];
     }

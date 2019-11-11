@@ -21,18 +21,20 @@ window.addEventListener("load", function () {
   });
 
   document.getElementById("salvar").addEventListener("click", function (event) {
-    dados = JSON.stringify(pegaValor());
-    $.ajax({
-        type: 'POST',
-        url: 'teste',
-        dataType: 'JSON',
-        data: {
-          data: dados
-        },
-        success: function (data) {
-          console.log('sucesso');
-        }
-    });
+    dados = pegaValor();
+    if(dados != false){
+      $.ajax({
+          type: 'POST',
+          url: 'teste',
+          dataType: 'JSON',
+          data: {
+            data: dados
+          },
+          success: function (data) {
+            console.log('sucesso');
+          }
+      });
+    }
   });
 });
 
@@ -42,15 +44,17 @@ function pegaValor(){
   var titulo = document.getElementsByName('titulo');
   var itemPaiEscondido = document.getElementById('itens').attributes.style.value == 'display:show;' ? false : true;
   var dados = {};
+  var vlItem = [];
+  var stItem = [];
 
   for(i=0;i<itens.length;i++){
     var iten = itens[i];
     if((iten.value == '' || iten.value == null) && itemPaiEscondido == false){
       alert("Preencha todos os campos!");
       iten.focus();
-      break;
+      return false;
     }else{
-      dados['ITEMS_'+i]['ITEM'+i]= iten.value;
+      stItem.push( iten.value);
     } 
   }
 
@@ -58,30 +62,33 @@ function pegaValor(){
     var valor = valores[i];
     if((valor.value == '' || valor.value == null) && itemPaiEscondido == false){
       alert("Preencha todos os campos!");
+      console.log('aqui?2');
       valor.focus();
-      break;
+      return false;
     }
     else if(!parseFloat(valor.value) && itemPaiEscondido == false){
       alert("Digite apenas números!");
       valor.focus();
-      break;
+      return false;
     }else{
-      dados['ITEM_'+i]['VALOR'+i]= valor.value.replace(',', '.');
+      vlItem.push(valor.value.replace(',', '.'));
     }
  }
-  if(titulo[0].value != "" || titulo[0].value != null){
-    dados['TITULO'] = titulo[0].value;
-  }else{
+  if(titulo[0].value == '' || titulo[0].value == null){
     alert("Digite o título!");
     titulo[0].focus();
+    return false;
+  }else{
+    dados['TITULO'] = titulo[0].value;
   }
+
+  vlItem.forEach(function(campo,key){
+    if(campo)
+      dados[key] = [stItem[key],campo];
+  });
 
   return dados;
   
-}
-
-function montarJson(item,index){
-  console.log(item);
 }
 
 function deletarItens(itens){

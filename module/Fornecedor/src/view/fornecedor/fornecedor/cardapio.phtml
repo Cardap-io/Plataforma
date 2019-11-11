@@ -40,12 +40,11 @@ $this->headTitle($title);
                     $form->setAttribute('action', $this->url('fornecedor', ['action' => 'cardapio']));
                     $form->prepare();
                     echo $this->form()->openTag($form);
-                    $id = $this->form->get('id');
-                    $item = $this->form->get('item')->setAttribute('class','form-control')->setAttribute('id','item');
-                    $valor = $this->form->get('valor')->setAttribute('class','form-control')->setAttribute('id','valor');
-                    $titulo = $this->form->get('titulo')->setAttribute('class','form-control ')->setAttribute('autofocus','autofocus');
-                    // $submit = $this->form->get('submit')->setAttribute('class','btn btn-primary');
-                    // $this->formElement($id);
+                    $id = $this->form->get('ID_ITEM_ITM');
+                    $item = $this->form->get('ST_NOME_ITM')->setAttribute('class','form-control')->setAttribute('id','item');
+                    $valor = $this->form->get('VL_ITEM_ITM')->setAttribute('class','form-control')->setAttribute('id','valor');
+                    $titulo = $this->form->get('ST_TITULO_TIT')->setAttribute('class','form-control ')->setAttribute('autofocus','autofocus');
+
                 ?>
                 <div class="container" >
                     <div id="container">

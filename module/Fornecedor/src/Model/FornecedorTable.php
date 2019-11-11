@@ -32,8 +32,6 @@ class FornecedorTable {
             'sobrenome' => $Fornecedor->getSobrenome(),
             'email' => $Fornecedor->getEmail(),
             'situacao' => $Fornecedor->getSituacao(),
-            'item' => $Fornecedor->getItem(),
-            'valor' => $Fornecedor->getValor(),
         ];
 
         $id = (int) $Fornecedor->getId();
