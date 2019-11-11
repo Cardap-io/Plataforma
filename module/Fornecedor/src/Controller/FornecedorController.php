@@ -5,6 +5,7 @@ namespace Fornecedor\Controller;
 use Exception;
 // use Fornecedor\Form\FornecedorForm;
 use Fornecedor\Form\ItemForm;
+use Fornecedor\Model\Fornecedor;
 use Zend\Mvc\Controller\AbstractActionController; // Class  AbstractActionController vem do zend
 use Zend\View\Model\ViewModel;
 
@@ -96,11 +97,12 @@ class FornecedorController extends AbstractActionController {
     public function testeAction() {
         $request = $this->getRequest();
         $params = $request->getPost()->toArray();
+        // $item = new \Fornecedor\Model\Itemx();
         $form = new ItemForm();
         if (!$request->isPost())
             return new ViewModel(['form' => $form]);
 
-        $Item = new \Fornecedor\Model\Item();
+        $Item = new \Fornecedor\Model\Fornecedor();
         $form->setData($request->getPost());
         if (!$form->isValid())
             return new ViewModel(['form' => $form]);

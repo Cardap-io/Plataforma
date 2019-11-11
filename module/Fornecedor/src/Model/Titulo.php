@@ -1,6 +1,6 @@
 <?php
 
-namespace Titulo\Model;
+namespace Fornecedor\Model;
 
 class Titulo  implements \Zend\Stdlib\ArraySerializableInterface { // basicamente serve par transformar um valor em um objeto dentro de um fluxo ou vise versa
 

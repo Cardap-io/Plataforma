@@ -1,6 +1,6 @@
 <?php
 
-namespace Titulo\Model;
+namespace Fornecedor\Model;
 
 use RuntimeException;
 use Zend\Db\TableGateway\TableGatewayInterface;
