@@ -44,5 +44,15 @@ class ItemTable {
     public function deletarItem($idItem) {
         $this->tableGateway->delete(['ID_ITEM_ITM' => (int)$idItem]);
     }
+
+    public function getItensDoTitulo($idItitulo) {
+        $idItitulo = (int) $idItitulo; 
+        $rowset = $this->tableGateway->fetchAll("ID_TITULO_TIT =  '.$idItitulo.'"); // where id
+        $row = $rowset->current(); // se existe um registro o current retorna a linha atual
+        // if (!$row)
+        //     throw new RuntimeException(sprintf('Não foi encontrado o item %d',$idItitulo));
+        return $row;
+    }
+
 }
 ?>

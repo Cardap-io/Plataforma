@@ -21,7 +21,7 @@ return [
                     'defaults' => [  // valores padroes
                         'controller' => Controller\FornecedorController:: //controller padrao
                         class,
-                        'action' => 'index', //action padrao
+                        'action' => 'cardapio', //action padrao
                     ],
                 ],
             ],

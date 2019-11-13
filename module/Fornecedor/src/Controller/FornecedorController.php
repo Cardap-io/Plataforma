@@ -15,10 +15,10 @@ class FornecedorController extends AbstractActionController {
     private $tableItem;
     private $tableTitulo;
 
-    public function __construct($tableFornecedor,$tableItem,$tableTitulo) {
+    public function __construct($tableFornecedor,$tableItem,$tableGatewayTitulo) {
         $this->tableFornecedor = $tableFornecedor;
         $this->tableItem = $tableItem;
-        $this->tableTitulo = $tableTitulo;
+        $this->tableTitulo = $tableGatewayTitulo;
     }
 
     public function indexAction() { // todo action tem que retornar uma view
@@ -26,22 +26,10 @@ class FornecedorController extends AbstractActionController {
         return new ViewModel(['fornecedores' => $this->tableFornecedor->fetchAll()]);
     }
 
-    // public function adicionarAction() {
-    //     $form = new FornecedorForm();
-    //     $form->get('submit')->setValue('Adicionar');
-    //     $request = $this->getRequest(); ///Pega as informações da requisição que foi enviado pelo php via objeto
-    //     if (!$request->isPost())
-    //         return new ViewModel(['form' => $form]);
-
-    //     $fornecedor = new \Fornecedor\Model\Fornecedor();
-    //     $form->setData($request->getPost());
-    //     if (!$form->isValid()) 
-    //         return new ViewModel(['form' => $form]);
-
-    //     $fornecedor->exchangeArray($form->getData());
-    //     $this->tableFornecedor->salvarFornecedor($fornecedor);
-    //     return $this->redirect()->toRoute('fornecedor');
-    // }
+    public function cardapioAction() {
+        $form = new ItemForm();
+        return new ViewModel(['form' => $form,'arTitulos' => $this->tableTitulo->fetchAll()->toArray(), 'tableItem' =>$this->tableItem]);
+    }
 
     // public function editarAction() {
     //     $id = (int) $this->params()->fromRoute('id', 0); // pega o param id se não tiver ele assume 0
@@ -87,39 +75,45 @@ class FornecedorController extends AbstractActionController {
     //     return ['id' => $id, 'fornecedor' => $this->tableFornecedor->getFornecedor($id)];
     // }
 
-    public function cardapioAction() {
-        $form = new ItemForm();
-      
-        return new ViewModel(['form' => $form]);
-        
+    public function adicionarAction() {
+        $request = $this->getRequest();
+        $modelItem = new \Fornecedor\Model\Item();
+        $modelTitulo = new \Fornecedor\Model\Titulo();
+        $params = $request->getPost()->toArray();
+        $dados =  $params['data'];
+        $stTitulo = $dados['ST_TITULO_TIT'];
+        $objTituloTable = $this->tableTitulo->getIdTitulo($stTitulo);
+
+        if (isset($objTituloTable)) {
+            echo json_encode(['erro' => 'Menu já existente, para alteralo clique em editar']);exit;
+        }else {
+            $modelTitulo->exchangeArray($dados);
+            $this->tableTitulo->salvarTitulo($modelTitulo);
+        }
+
+        unset($dados['ST_TITULO_TIT']);
+        $idTitulo = $this->tableTitulo->getIdTitulo($stTitulo)->getIdTitulo();
+
+        foreach ($dados as $dado) {
+            $arItens = ['ST_NOME_ITM' => $dado[0], 'VL_ITEM_ITM' => $dado[1], 'ID_TITULO_TIT' => $idTitulo]; 
+            $modelItem->exchangeArray($arItens);
+            $this->tableItem->salvarItem($modelItem);
+        }
+        echo json_encode(['sucesso' => 'Menu adicionado com sucesso!']);exit;
     }
 
-    public function testeAction() {
+    public function getmenuAction() {
         $request = $this->getRequest();
         $params = $request->getPost()->toArray();
-        // $item = new \Fornecedor\Model\Itemx();
-        $form = new ItemForm();
-        if (!$request->isPost())
-            return new ViewModel(['form' => $form]);
+        $idTitulo =  $params['data'];
+        $stNomeTitulo = $this->tableTitulo->getTitulo($idTitulo)->getNomeTitulo();
+        $itens = $this->tableItem->fetchAll()->toArray();
+        foreach($itens as $iten)
+            if($iten['ID_TITULO_TIT'] == $idTitulo)
+                $arItens[] = $iten;
 
-        $Item = new \Fornecedor\Model\Fornecedor();
-        $form->setData($request->getPost());
-        if (!$form->isValid())
-            return new ViewModel(['form' => $form]);
-
-        print_r($params['data']['TITULO']);
-        die('alo');
-        // foreach($params['data'] as $param){
-        //     print_R($param);
-        //     die('vix');
-
-        // }
-
-        // $fornecedor->exchangeArray($form->getData());
-        $this->tableItem->salvarItem($Item);
-        return $this->redirect()->toRoute('fornecedor/cardapio');
+        echo json_encode(['arItens' => $arItens,'stNomeTitulo' => $stNomeTitulo]);exit;
     }
-
 }
 
 ?>

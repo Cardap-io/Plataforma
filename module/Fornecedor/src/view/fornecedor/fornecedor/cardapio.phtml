@@ -1,19 +1,6 @@
 <?php
 $title = "Cardapio";
 $this->headTitle($title);
-// $this->headScript()->prependFile(
-    // $this->baseUrl(__DIR__.'/cardapio.js'));
-
-//   $this->basePath(__DIR__.'/cardapio.js');
-    // ->prependFile($this->basePath('js/jquery-3.1.0.min.js'))
-
-//  echo $this->headLink()->prependStylesheet(
-//     $this->baseUrl('path/to/file.css'));
-//  echo $this->inlineScript()->prependFile(
-//         'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js');
-// print_R(Zend_Controller_Front::getInstance()->getRequest()->getControllerName());
-// die('alo');
-// 
 ?>
 <script src="<?=$this->basePath('/js/cardapio.js')?>"></script>
 <h1><?=$this->escapeHtml($title)?></h1>
@@ -29,13 +16,6 @@ $this->headTitle($title);
                 <h4 class="modal-title">Cardapio</h4>
             </div>
             <div class="modal-body">
-                <!-- <input type="button" onclick="clonarLinha()" value="Nova linha" /> -->
-                <!-- <div class="col-md-9">  
-                    <input type="text" name="q" class="form-control __web-inspector-hide-shortcut__" placeholder="Título...">
-                </div>
-                <div class="col-md-3">  
-                    <button type="button" onclick="clonarLinha()" class="btn btn-block btn-warning">Titulo cardapio</button>
-                </div> -->
                 <?php
                     $form->setAttribute('action', $this->url('fornecedor', ['action' => 'cardapio']));
                     $form->prepare();
@@ -44,7 +24,6 @@ $this->headTitle($title);
                     $item = $this->form->get('ST_NOME_ITM')->setAttribute('class','form-control')->setAttribute('id','item');
                     $valor = $this->form->get('VL_ITEM_ITM')->setAttribute('class','form-control')->setAttribute('id','valor');
                     $titulo = $this->form->get('ST_TITULO_TIT')->setAttribute('class','form-control ')->setAttribute('autofocus','autofocus');
-
                 ?>
                 <div class="container" >
                     <div id="container">
@@ -76,23 +55,15 @@ $this->headTitle($title);
                     </div> 
                     <div class="row" style="margin-top: 1%">
                             <div class="col-sm-2">
-                                <!-- <button type="button" id="adicionarItem" class="btn btn-block btn-info btn-xs" > Adicionar item </button> -->
                                 <button type="button" id="adicionarItens" class="btn btn-block btn-info btn-xs" > Adicionar item </button>
                             </div>
                     </div>
                 </div>
-                <!-- <table id="tbl" border="1">
-                    <tr>
-                    <td>Produto</td>
-                    <td>Valor</td>
-                    <td>Acao</td>
-                    </tr>
-                </table>         -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
-
                 <button id="salvar" type="button" class="btn btn-primary">Salvar</button>
+                <!-- <button id="salvar" type="button" class="btn btn-primary">Salvar</button> -->
             </div>
         </div>
     </div>
@@ -102,30 +73,31 @@ $this->headTitle($title);
     <div>
         <div class="col-md-12">
         <?php
-            $titulos = array("Entrada","Prato principal","Bebidas");
-            foreach($titulos as $titulo) :
+            foreach($arTitulos as $titulo) :
         ?>
                     <div class="box box-default collapsed-box box-solid">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><?=$titulo?></h3>
+                        <h3 class="box-title"><?=$titulo['ST_TITULO_TIT']?></h3>
                         <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
-                        </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                            <button id='modalbody'type="button" class="btn btn-box-tool" onclick="editarItens('<?=$titulo['ID_TITULO_TIT']?>')" data-toggle="modal" data-target="#modal-default"><i class="glyphicon glyphicon-pencil"></i></button>
                         </div>
                     </div>  
                         <div class="box-body">
                             <table class="table no-border">
                             <tbody>
-                                <?php
-                                $testes = array(array("ALIMENTO" => "Arroz","VALOR" => "19.90"),array("ALIMENTO" => "Carne","VALOR" => "19.90"));
-                                    foreach($testes as $teste) :
+                                <?php                    
+                                    $arItens = $tableItem->fetchAll()->toArray();
+                                    foreach($arItens as $itens) :
+                                        if($titulo['ID_TITULO_TIT'] == $itens['ID_TITULO_TIT']){
                                         ?>
                                             <tr>
                                             <th style="width: 5%"></th>
-                                            <th style="width: 85%"><?=$teste['ALIMENTO']?></th>
-                                            <th><?=$teste['VALOR']?></th>
+                                            <th style="width: 85%"><?=$itens['ST_NOME_ITM']?></th>
+                                            <th><?=number_format($itens['VL_ITEM_ITM'],2,",",".")?></th>
                                             </tr>
                                         <?php
+                                        }
                                     endforeach;
                                 ?>
                                 </tbody>

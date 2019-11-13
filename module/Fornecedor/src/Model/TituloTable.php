@@ -21,8 +21,16 @@ class TituloTable {
         $idTitulo = (int) $idTitulo; 
         $rowset = $this->tableGateway->select(['ID_TITULO_TIT' => $idTitulo]); // where id
         $row = $rowset->current(); // se existe um registro o current retorna a linha atual
-        if (!$row)
-            throw new RuntimeException(sprintf('Não foi encontrado o título %d',$idTitulo)); //se ocorrer um erro encontrado no tempo de execução
+        // if (!$row)
+        //     throw new RuntimeException(sprintf('Não foi encontrado o título %d',$idTitulo)); //se ocorrer um erro encontrado no tempo de execução
+        return $row;
+    }
+
+    public function getIdTitulo($stTitulo) {
+        $rowset = $this->tableGateway->select(['ST_TITULO_TIT' => $stTitulo]);
+        $row = $rowset->current();
+        // if (!$row)
+        //     throw new RuntimeException(sprintf('Não foi encontrado o título %d',$idTitulo));
         return $row;
     }
 
