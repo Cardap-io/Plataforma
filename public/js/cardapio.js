@@ -14,7 +14,8 @@ window.addEventListener("load", function () {
       itensCopia.setAttribute('style','margin-top: 1%');
       itensCopia.children[1].children.item(0).value = '';
       itensCopia.children[0].children.item(0).value = '';
-      itensCopia.children[2].children.item(0).setAttribute('onclick',"deletarItens('itens"+count+"')");  
+      itensCopia.children[2].children.item(0).value = '';
+      itensCopia.children[3].children.item(0).setAttribute('onclick',"deletarItens('itens"+count+"')");  
       container.appendChild(itensCopia);
     }
     count += 1;
@@ -26,7 +27,7 @@ window.addEventListener("load", function () {
     if(dados != false){
       $.ajax({
           type: 'POST',
-          url: 'fornecedor/adicionar',
+          url: 'adicionar',
           dataType: 'JSON',
           data: {
             data: dados
@@ -37,7 +38,7 @@ window.addEventListener("load", function () {
                 alert(resp);
               else{
                 alert(resp);
-                window.location.reload()
+                window.location.reload();
               }
            })
           }
@@ -50,10 +51,12 @@ function pegaValor(){
   var itens = document.getElementsByName('ST_NOME_ITM');
   var valores = document.getElementsByName('VL_ITEM_ITM');
   var titulo = document.getElementsByName('ST_TITULO_TIT');
+  var descricao = document.getElementsByName('ST_DESCRICAO_ITM');
   var itemPaiEscondido = document.getElementById('itens').attributes.style.value == 'display:show;' ? false : true;
   var dados = {};
   var vlItem = [];
   var stItem = [];
+  var stDescricao = [];
 
   for(i=0;i<itens.length;i++){
     var iten = itens[i];
@@ -63,6 +66,17 @@ function pegaValor(){
       return false;
     }else{
       stItem.push( iten.value);
+    } 
+  }
+
+  for(i=0;i<descricao.length;i++){
+    var desc = descricao[i];
+    if((desc.value == '' || desc.value == null) && itemPaiEscondido == false){
+      alert("Preencha todos os campos!");
+      desc.focus();
+      return false;
+    }else{
+      stDescricao.push( desc.value);
     } 
   }
 
@@ -95,9 +109,8 @@ function pegaValor(){
 
   vlItem.forEach(function(campo,key){
     if(campo)
-      dados[key] = [stItem[key],campo];
+      dados[key] = [stItem[key],stDescricao[key],campo];
   });
-
   return dados;
   
 }
@@ -108,6 +121,7 @@ function deletarItens(itens){
     itemDeletar.setAttribute('style','display:none;');
     itemDeletar.children[1].children.item(0).value = '';
     itemDeletar.children[0].children.item(0).value = '';
+    itemDeletar.children[2].children.item(0).value = '';
   }else{
     itemDeletar.remove();
   }
@@ -118,39 +132,19 @@ function deletarItens(itens){
   }
 }
 
-function editarItens(idTitulo){
- 
-  $.ajax({
-    type: 'POST',
-    url: 'getmenu',
-    dataType: 'JSON',
-    data: {
-      data: idTitulo
+function deletarMenu(idTitulo){
+  if(confirm("Deseja excluir esse menu?")){
+    $.ajax({
+      type: 'POST',
+      url: 'deletarmenu',
+      dataType: 'JSON',
+      data: {
+        data: idTitulo
     },
-    success: function (data) {
-      // $.each(data, function(i, resp){
-      // var titulo = document.getElementsByName('ST_TITULO_TIT');
-      // titulo.value = data.stNomeTitulo;
-      console.log( titulo);
-
-    }
-  });
-
-  // var container = document.getElementById('container');
-  // var itensKey = document.getElementById('itens');
-  // var itensCopia = itensKey.cloneNode(true);
-  // var elemento = document.getElementsByName('ST_NOME_ITM').length;
-  // var itensAparecendo = itensKey.attributes.style.value == 'display:show;' ? false : true;
-  // if(elemento == 1 && itensAparecendo){
-  //   document.getElementById('tituloItens').setAttribute('style','display:show; margin-top: 1%;');
-  //   itensKey.setAttribute('style','display:show;');
-  // }else{
-  //   itensCopia.setAttribute('id','itens'+count);
-  //   itensCopia.setAttribute('style','margin-top: 1%');
-  //   itensCopia.children[1].children.item(0).value = '';
-  //   itensCopia.children[0].children.item(0).value = '';
-  //   itensCopia.children[2].children.item(0).setAttribute('onclick',"deletarItens('itens"+count+"')");  
-  //   container.appendChild(itensCopia);
-  // }
-  // count += 1;
-};
+      success: function (data) {
+        alert('Deletado com sucesso!');
+        window.location.reload();
+      }
+    });
+  }
+}

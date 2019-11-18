@@ -31,6 +31,7 @@ class ItemTable {
             'ST_NOME_ITM' => $Item->getNomeItem(),
             'VL_ITEM_ITM' => $Item->getValorItem(),
             'ID_TITULO_TIT' => $Item->getIdTitulo(),
+            'ST_DESCRICAO_ITM' => $Item->getDescricaoItem(),
         ];
 
         $idItem = (int) $Item->getIdItem();
@@ -43,6 +44,10 @@ class ItemTable {
 
     public function deletarItem($idItem) {
         $this->tableGateway->delete(['ID_ITEM_ITM' => (int)$idItem]);
+    }
+
+    public function deletarItemDoTitulo($idTitulo) {
+        $this->tableGateway->delete(['ID_TITULO_TIT' => (int)$idTitulo]);
     }
 
     public function getItensDoTitulo($idItitulo) {

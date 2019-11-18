@@ -3,9 +3,7 @@
 namespace Fornecedor\Controller;
 
 use Exception;
-// use Fornecedor\Form\FornecedorForm;
 use Fornecedor\Form\ItemForm;
-use Fornecedor\Model\Fornecedor;
 use Zend\Mvc\Controller\AbstractActionController; // Class  AbstractActionController vem do zend
 use Zend\View\Model\ViewModel;
 
@@ -58,23 +56,6 @@ class FornecedorController extends AbstractActionController {
     //     return $this->redirect()->toRoute('fornecedor');
     // }
 
-    // public function removerAction() {
-    //     $id = (int) $this->params()->fromRoute('id', 0);
-    //     if (0 == $id)
-    //         return $this->redirect()->toRoute('fornecedor');
-
-    //     $request = $this->getRequest();
-    //     if ($request->isPost()) {
-    //         $deletar = $request->getPost('deletar','Não');
-    //         if ($deletar == 'Sim') {
-    //             $id = (int) $request->getPost('id');
-    //             $this->tableFornecedor->deletarFornecedor($id);
-    //         }
-    //         return $this->redirect()->toRoute('fornecedor');
-    //     }
-    //     return ['id' => $id, 'fornecedor' => $this->tableFornecedor->getFornecedor($id)];
-    // }
-
     public function adicionarAction() {
         $request = $this->getRequest();
         $modelItem = new \Fornecedor\Model\Item();
@@ -95,25 +76,48 @@ class FornecedorController extends AbstractActionController {
         $idTitulo = $this->tableTitulo->getIdTitulo($stTitulo)->getIdTitulo();
 
         foreach ($dados as $dado) {
-            $arItens = ['ST_NOME_ITM' => $dado[0], 'VL_ITEM_ITM' => $dado[1], 'ID_TITULO_TIT' => $idTitulo]; 
+            $arItens = ['ST_NOME_ITM' => $dado[0], 'ST_DESCRICAO_ITM' => $dado[1], 'VL_ITEM_ITM' => $dado[2], 'ID_TITULO_TIT' => $idTitulo]; 
             $modelItem->exchangeArray($arItens);
             $this->tableItem->salvarItem($modelItem);
         }
         echo json_encode(['sucesso' => 'Menu adicionado com sucesso!']);exit;
     }
 
-    public function getmenuAction() {
+    public function deletarmenuAction() {
         $request = $this->getRequest();
         $params = $request->getPost()->toArray();
         $idTitulo =  $params['data'];
-        $stNomeTitulo = $this->tableTitulo->getTitulo($idTitulo)->getNomeTitulo();
-        $itens = $this->tableItem->fetchAll()->toArray();
-        foreach($itens as $iten)
-            if($iten['ID_TITULO_TIT'] == $idTitulo)
-                $arItens[] = $iten;
-
-        echo json_encode(['arItens' => $arItens,'stNomeTitulo' => $stNomeTitulo]);exit;
+        $this->tableItem->deletarItemDoTitulo($idTitulo);
+        $this->tableTitulo->deletarTitulo($idTitulo);
+        echo json_encode(['sucesso' => 'Deletado com sucesso!']);exit;
     }
+
+    public function qrcodeAction() {
+        $server = new Zend_Rest_Server();
+        $server->addFunction('api');
+        $server->handle();
+       
+    }
+
+    public function api(){
+        $arTitulos = $this->tableTitulo->fetchAll()->toArray();
+        $arItens = $this->tableItem->fetchAll()->toArray();
+        $dados = [];
+        foreach ($arTitulos as $titulo){
+            foreach ($arItens as $itens){
+                if($titulo['ID_TITULO_TIT'] == $itens['ID_TITULO_TIT']){
+                    $dados['produtos'][] = [
+                        'id' => $itens['ID_ITEM_ITM'],
+                        'nome' => $itens['ST_NOME_ITM'],
+                        'descricao' => $itens['ST_DESCRICAO_ITM'],
+                        'valor' => $itens['VL_ITEM_ITM'],
+                        'categoria' => $titulo['ST_TITULO_TIT'],
+                    ];
+                }
+            }
+        }
+        echo json_encode(['data' => $dados]);exit;
+    }    
 }
 
 ?>

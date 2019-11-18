@@ -8,12 +8,14 @@ class Item  implements \Zend\Stdlib\ArraySerializableInterface { // basicamente 
     private $stNomeItem;
     private $vlItem;
     private $idTitulo;
+    private $stDescricao;
 
     public function exchangeArray(array $data) {
         $this->idItem = !empty($data['ID_ITEM_ITM']) ? $data['ID_ITEM_ITM'] : null;
         $this->stNomeItem = !empty($data['ST_NOME_ITM']) ? $data['ST_NOME_ITM'] : null;
         $this->vlItem = !empty($data['VL_ITEM_ITM']) ? $data['VL_ITEM_ITM'] : null;
         $this->idTitulo = !empty($data['ID_TITULO_TIT']) ? $data['ID_TITULO_TIT'] : null;
+        $this->stDescricao = !empty($data['ST_DESCRICAO_ITM']) ? $data['ST_DESCRICAO_ITM'] : null;
     }
 
     public function getIdItem() {
@@ -47,12 +49,21 @@ class Item  implements \Zend\Stdlib\ArraySerializableInterface { // basicamente 
     public function setIdTitulo($idTitulo) {
         $this->idTitulo = $idTitulo;
     }
+
+    public function getDescricaoItem() {
+        return $this->stDescricao;
+    }
+
+    public function setDescricaoItem($stDescricao) {
+        $this->stDescricao = $stDescricao;
+    }
     public function getArrayCopy(): array {
         return[
             'ID_ITEM_ITM' => $this->idItem,
             'ST_NOME_ITM' => $this->stNomeItem,
             'VL_ITEM_ITM' => $this->vlItem,
             'ID_TITULO_TIT' => $this->idTitulo,
+            'ST_DESCRICAO_ITM' => $this->stDescricao
         ];
     }
 }
