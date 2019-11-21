@@ -48,18 +48,19 @@ window.addEventListener("load", function () {
   });
 $('#modal-default').on('hidden.bs.modal', function(){
   var itensApaga = document.getElementsByName('itensDelete');
-  for(i=0;i<itensApaga.length;i++){
-    var iten = itensApaga[i];
-    if(iten.getAttribute('id') == 'itens' || iten.getAttribute('id')=='itensEditar'){
-      iten.setAttribute('style','display:none;');
-      iten.children[2].children.item(0).value = '';
-      iten.children[1].children.item(0).value = '';
-      iten.children[3].children.item(0).value = '';
-      iten.children[0].children.item(0).value = '';
+  $.each(itensApaga, function(i, resp){
+    var idValue = resp.getAttribute('id');
+    console.log(idValue)
+    if(idValue == 'itens'){
+      resp.setAttribute('style','display:none;');
+      resp.children[2].children.item(0).value = '';
+      resp.children[1].children.item(0).value = '';
+      resp.children[3].children.item(0).value = '';
+      resp.children[0].children.item(0).value = '';
     }else{
-      iten.remove();
+      resp.remove();
     }
-  }
+  });
 
   var elemento = document.getElementsByName('ST_NOME_ITM').length;
   var itemPaiEscondido = document.getElementById('itens').attributes.style.value == 'display:show;' ? false : true;
@@ -193,7 +194,6 @@ function editarMenu (idTitulo){
   var container = document.getElementById('container');
   var itensKey = document.getElementById('itens');
   var itemPaiEscondido = document.getElementById('itens').attributes.style.value == 'display:show;' ? false : true;
-  var elemento;
   var count = 0;
   $.ajax({
     type: 'POST',
