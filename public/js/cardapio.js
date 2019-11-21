@@ -46,6 +46,27 @@ window.addEventListener("load", function () {
       });
     }
   });
+$('#modal-default').on('hidden.bs.modal', function(){
+  var itensApaga = document.getElementsByName('itensDelete');
+  for(i=0;i<itensApaga.length;i++){
+    var iten = itensApaga[i];
+    if(iten.getAttribute('id') == 'itens' || iten.getAttribute('id')=='itensEditar'){
+      iten.setAttribute('style','display:none;');
+      iten.children[2].children.item(0).value = '';
+      iten.children[1].children.item(0).value = '';
+      iten.children[3].children.item(0).value = '';
+      iten.children[0].children.item(0).value = '';
+    }else{
+      iten.remove();
+    }
+  }
+
+  var elemento = document.getElementsByName('ST_NOME_ITM').length;
+  var itemPaiEscondido = document.getElementById('itens').attributes.style.value == 'display:show;' ? false : true;
+  if(elemento == 1 && itemPaiEscondido){
+    document.getElementById('tituloItens').setAttribute('style','display:none');
+  }
+  });
 });
 
 function pegaValor(){
@@ -237,10 +258,4 @@ function editarMenu (idTitulo){
 
     }
 });
-// var myBackup = $('#modal-default').clone();
-// $('#modal-default').on('hidden.bs.modal', function(){
-//   $('#modal-default').remove();
-//   // var myClone = myBackup.cloneNode(true);
-//   $('body').append(myBackup);
-//   });
 }
