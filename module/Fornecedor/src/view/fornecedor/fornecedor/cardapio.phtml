@@ -7,7 +7,6 @@ $this->headTitle($title);
 
 <section class="content-header">
 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-default">Cadastrar cardapio</button>
-<!-- <button type="button" class="btn btn-info" onclick="qrCode()">Gerar QRCode</button> -->
 <div class="modal fade modal-x2" id="modal-default" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -21,11 +20,11 @@ $this->headTitle($title);
                     $form->setAttribute('action', $this->url('fornecedor', ['action' => 'cardapio']));
                     $form->prepare();
                     echo $this->form()->openTag($form);
-                    $id = $this->form->get('ID_ITEM_ITM');
+                    $id = $this->form->get('ID_ITEM_ITM')->setAttribute('id','iditem');
                     $item = $this->form->get('ST_NOME_ITM')->setAttribute('class','form-control')->setAttribute('id','item');
                     $valor = $this->form->get('VL_ITEM_ITM')->setAttribute('class','form-control')->setAttribute('id','valor');
                     $descricao = $this->form->get('ST_DESCRICAO_ITM')->setAttribute('class','form-control')->setAttribute('id','descricao');
-                    $titulo = $this->form->get('ST_TITULO_TIT')->setAttribute('class','form-control ')->setAttribute('autofocus','autofocus');
+                    $titulo = $this->form->get('ST_TITULO_TIT')->setAttribute('class','form-control ')->setAttribute('autofocus','autofocus')->setAttribute('id','titulo');
                 ?>
                 <div class="container" >
                     <div id="container">
@@ -47,6 +46,9 @@ $this->headTitle($title);
                             </div>
                         </div>
                         <div class="row" id="itens" style="display:none">
+                            <div>
+                                <?=$this->formElement($id)?>
+                            </div>
                             <div class="col-sm-2">
                                 <?=$this->formElement($item)?>
                             </div>
@@ -68,10 +70,9 @@ $this->headTitle($title);
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" id="footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
                 <button id="salvar" type="button" class="btn btn-primary">Salvar</button>
-                <!-- <button id="salvar" type="button" class="btn btn-primary">Salvar</button> -->
             </div>
         </div>
     </div>
@@ -81,6 +82,7 @@ $this->headTitle($title);
     <div>
         <div class="col-md-12">
         <?php
+            $arItens = $tableItem->fetchAll()->toArray();
             foreach($arTitulos as $titulo) :
         ?>
                     <div class="box box-default collapsed-box box-solid">
@@ -89,13 +91,13 @@ $this->headTitle($title);
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
                             <button type="button" class="btn btn-box-tool" onclick="deletarMenu('<?=$titulo['ID_TITULO_TIT']?>')" ><i class="glyphicon glyphicon-trash"></i></button>
+                            <button type="button" class="btn btn-box-tool" onclick="editarMenu('<?=$titulo['ID_TITULO_TIT']?>')" ><i class="glyphicon glyphicon-wrench"></i></button>
                         </div>
                     </div>  
                         <div class="box-body">
                             <table class="table no-border">
                             <tbody>
-                                <?php                    
-                                    $arItens = $tableItem->fetchAll()->toArray();
+                                <?php
                                     foreach($arItens as $itens) :
                                         if($titulo['ID_TITULO_TIT'] == $itens['ID_TITULO_TIT']){
                                         ?>

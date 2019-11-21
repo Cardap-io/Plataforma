@@ -12,10 +12,11 @@ window.addEventListener("load", function () {
     }else{
       itensCopia.setAttribute('id','itens'+count);
       itensCopia.setAttribute('style','margin-top: 1%');
-      itensCopia.children[1].children.item(0).value = '';
       itensCopia.children[0].children.item(0).value = '';
       itensCopia.children[2].children.item(0).value = '';
-      itensCopia.children[3].children.item(0).setAttribute('onclick',"deletarItens('itens"+count+"')");  
+      itensCopia.children[1].children.item(0).value = '';
+      itensCopia.children[3].children.item(0).value = '';
+      itensCopia.children[4].children.item(0).setAttribute('onclick',"deletarItens('itens"+count+"')");  
       container.appendChild(itensCopia);
     }
     count += 1;
@@ -52,11 +53,13 @@ function pegaValor(){
   var valores = document.getElementsByName('VL_ITEM_ITM');
   var titulo = document.getElementsByName('ST_TITULO_TIT');
   var descricao = document.getElementsByName('ST_DESCRICAO_ITM');
+  var idsItem = document.getElementsByName('ID_ITEM_ITM');
   var itemPaiEscondido = document.getElementById('itens').attributes.style.value == 'display:show;' ? false : true;
   var dados = {};
   var vlItem = [];
   var stItem = [];
   var stDescricao = [];
+  var idItem = [];
 
   for(i=0;i<itens.length;i++){
     var iten = itens[i];
@@ -107,9 +110,14 @@ function pegaValor(){
     dados['ST_TITULO_TIT'] = titulo[0].value;
   }
 
+  for(i=0;i<idsItem.length;i++){
+    var id = idsItem[i];
+    idItem.push( id.value);
+  }
+
   vlItem.forEach(function(campo,key){
     if(campo)
-      dados[key] = [stItem[key],stDescricao[key],campo];
+      dados[key] = [stItem[key],stDescricao[key],campo,idItem[key]];
   });
   return dados;
   
@@ -117,11 +125,12 @@ function pegaValor(){
 
 function deletarItens(itens){
   var itemDeletar = document.getElementById(itens);
-  if(itens == 'itens'){
+  if(itens == 'itens' || itens=='itensEditar'){
     itemDeletar.setAttribute('style','display:none;');
-    itemDeletar.children[1].children.item(0).value = '';
-    itemDeletar.children[0].children.item(0).value = '';
     itemDeletar.children[2].children.item(0).value = '';
+    itemDeletar.children[1].children.item(0).value = '';
+    itemDeletar.children[3].children.item(0).value = '';
+    itemDeletar.children[0].children.item(0).value = '';
   }else{
     itemDeletar.remove();
   }
@@ -147,4 +156,91 @@ function deletarMenu(idTitulo){
       }
     });
   }
+}
+function editarMenu (idTitulo){
+  $('#modal-default').modal('show');
+  var titulo = document.getElementById('titulo');
+  var btnSalvar = document.getElementById('salvar');
+  var containerFooter = document.getElementById('footer');
+  if(btnSalvar){
+    var btnClone =  btnSalvar.cloneNode(true);
+    btnClone.setAttribute('id','editar')
+    btnSalvar.remove();
+    containerFooter.appendChild(btnClone);
+  }
+
+  var container = document.getElementById('container');
+  var itensKey = document.getElementById('itens');
+  var itemPaiEscondido = document.getElementById('itens').attributes.style.value == 'display:show;' ? false : true;
+  var elemento;
+  var count = 0;
+  $.ajax({
+    type: 'POST',
+    url: 'getitensdotitulo',
+    dataType: 'JSON',
+    data: {
+      data: idTitulo
+    },
+    success: function (data) {
+      $.each(data, function(i, resp){
+        elemento = document.getElementsByName('ST_NOME_ITM').length;
+        if(resp['stTitulo'])  titulo.value = resp['stTitulo'];
+        if(resp['nome']){
+          if(elemento == 1 && itemPaiEscondido){
+            document.getElementById('tituloItens').setAttribute('style','display:show; margin-top: 1%;');
+            itensKey.setAttribute('style','display:show;');
+            itemPaiEscondido = false;
+            itensKey.children[0].children.item(0).value = resp['id'];
+            itensKey.children[2].children.item(0).value = resp['descricao'];
+            itensKey.children[1].children.item(0).value = resp['nome'];
+            itensKey.children[3].children.item(0).value = resp['valor'];
+            itensKey.children[4].children.item(0).setAttribute('onclick',"deletarItens('itens')"); 
+          }else{
+            var itensCopia = itensKey.cloneNode(true);
+            itensCopia.setAttribute('id','itensEditar'+count);
+            itensCopia.setAttribute('style','margin-top: 1%');
+            itensCopia.children[0].children.item(0).value = resp['id'];
+            itensCopia.children[2].children.item(0).value = resp['descricao'];
+            itensCopia.children[1].children.item(0).value = resp['nome'];
+            itensCopia.children[3].children.item(0).value = resp['valor'];
+            itensCopia.children[4].children.item(0).setAttribute('onclick',"deletarItens('itensEditar"+count+"')");  
+            container.appendChild(itensCopia);
+          }
+        }
+        count += 1;
+      });
+
+      document.getElementById("editar").addEventListener("click", function (event) {
+        dados =  pegaValor();
+        if(dados != false){
+          $.ajax({
+              type: 'POST',
+              url: 'editar',
+              dataType: 'JSON',
+              data: {
+                data: dados,
+                titulo: idTitulo
+              },
+              success: function (data) {
+                $.each(data, function(i, resp){
+                  if(i == 'erro')
+                    alert(resp);
+                  else{
+                    alert(resp);
+                    window.location.reload();
+                  }
+               })
+              }
+          });
+        }
+      });
+
+    }
+});
+// var myBackup = $('#modal-default').clone();
+// $('#modal-default').on('hidden.bs.modal', function(){
+//   $('#modal-default').remove();
+//   // var myClone = myBackup.cloneNode(true);
+//   $('body').append(myBackup);
+//   });
 }

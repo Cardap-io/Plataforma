@@ -29,33 +29,6 @@ class FornecedorController extends AbstractActionController {
         return new ViewModel(['form' => $form,'arTitulos' => $this->tableTitulo->fetchAll()->toArray(), 'tableItem' =>$this->tableItem]);
     }
 
-    // public function editarAction() {
-    //     $id = (int) $this->params()->fromRoute('id', 0); // pega o param id se não tiver ele assume 0
-    //     if ($id === 0)
-    //         return $this->redirect()->toRoute('fornecedor', ['action' => 'adicionar']);
-        
-    //     try {
-    //         $fornecedor = $this->tableFornecedor->getFornecedor($id);
-    //     } catch (Exception $exc) {
-    //         return $this->redirect()->toRoute('fornecedor', ['action' => 'index']);
-    //     }
-
-    //     $form = new FornecedorForm();
-    //     $form->bind($fornecedor); //vai receber fornecedor e vai pegar os dados e vai popular
-    //     $form->get('submit')->setAttribute('value', 'Salvar');
-    //     $request = $this->getRequest();
-    //     $viewData = ['id' => $id, 'form' => $form];
-    //     if (!$request->isPost())
-    //         return $viewData;
-
-    //     $form->setData($request->getPost());
-    //     if (!$form->isValid()) 
-    //         return $viewData;
-
-    //     $this->tableFornecedor->salvarFornecedor($form->getData());
-    //     return $this->redirect()->toRoute('fornecedor');
-    // }
-
     public function adicionarAction() {
         $request = $this->getRequest();
         $modelItem = new \Fornecedor\Model\Item();
@@ -92,11 +65,38 @@ class FornecedorController extends AbstractActionController {
         echo json_encode(['sucesso' => 'Deletado com sucesso!']);exit;
     }
 
-    public function qrcodeAction() {
-        $server = new Zend_Rest_Server();
-        $server->addFunction('api');
-        $server->handle();
-       
+    public function editarAction() {
+        $request = $this->getRequest();
+        $modelItem = new \Fornecedor\Model\Item();
+        $modelTitulo = new \Fornecedor\Model\Titulo();
+        $params = $request->getPost()->toArray();
+        $dados =  $params['data'];
+        $idTitulo =  $params['titulo'];
+        $dados['ID_TITULO_TIT'] = $idTitulo;
+        $arItens = $this->tableItem->fetchAll()->toArray();
+        $modelTitulo->exchangeArray($dados);
+        $this->tableTitulo->salvarTitulo($modelTitulo);
+        unset($dados['ST_TITULO_TIT']);
+        unset($dados['ID_TITULO_TIT']);
+
+        foreach ($arItens as $itens)
+            if($idTitulo == $itens['ID_TITULO_TIT'])
+                $idsAntigos[] = $itens['ID_ITEM_ITM'];
+        
+        foreach ($dados as $dado)
+            if($dado[3] != '' || $dado[3] == null)
+                $idsRestantes[] = $dado[3];
+        
+        foreach ($idsAntigos as $id)
+            if(!in_array($id,$idsRestantes))
+                $this->tableItem->deletarItem($id);
+
+        foreach ($dados as $dado) {
+            $arItens = ['ID_ITEM_ITM' => $dado[3], 'ST_NOME_ITM' => $dado[0], 'ST_DESCRICAO_ITM' => $dado[1], 'VL_ITEM_ITM' => $dado[2], 'ID_TITULO_TIT' => $idTitulo]; 
+            $modelItem->exchangeArray($arItens);
+            $this->tableItem->salvarItem($modelItem);
+        }
+        echo json_encode(['sucesso' => 'Menu alterado com sucesso!']);exit;
     }
 
     public function api(){
@@ -117,7 +117,29 @@ class FornecedorController extends AbstractActionController {
             }
         }
         echo json_encode(['data' => $dados]);exit;
-    }    
+    }
+
+    public function getitensdotituloAction() {
+        $request = $this->getRequest();
+        $params = $request->getPost()->toArray();
+        $idTitulo =  $params['data'];
+        $arItens = $this->tableItem->fetchAll()->toArray();
+        $stTitulo = $this->tableTitulo->getTitulo($idTitulo)->getNomeTitulo();
+
+        foreach ($arItens as $itens) {
+            if($idTitulo == $itens['ID_TITULO_TIT']){
+                $dados[] = [
+                    'id' => $itens['ID_ITEM_ITM'],
+                    'nome' => $itens['ST_NOME_ITM'],
+                    'descricao' => $itens['ST_DESCRICAO_ITM'],
+                    'valor' => $itens['VL_ITEM_ITM'],
+                ];
+            }
+        }
+        $dados[] = ['stTitulo' => $stTitulo];
+        echo json_encode($dados);exit;
+    }
+
 }
 
 ?>
